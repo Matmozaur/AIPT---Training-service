@@ -1,0 +1,29 @@
+from pydantic import BaseModel
+from enum import Enum
+from typing import Dict
+
+
+class MuscleGroup(str, Enum):
+    Chest = 'Chest'
+    Upper_back = 'Upper_back'
+    Lower_back = 'Lower_back'
+    Abs = 'Abs'
+    Traps = 'Traps'
+    Shoulders = 'Shoulders'
+    Biceps = 'Biceps'
+    Triceps = 'Triceps'
+    Neck = 'Neck'
+    Forearms = 'Forearms'
+    Glutes = 'Glutes'
+    Quads = 'Quads'
+    Hamstrings = 'Hamstrings'
+    Calfs = 'Calfs'
+    
+
+class Excercise(BaseModel):
+    name: str
+    engadements: Dict[MuscleGroup, float]
+
+
+class ExcercisePerformed(Excercise):
+    sets: int
