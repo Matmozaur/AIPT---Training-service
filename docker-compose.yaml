@@ -1,0 +1,22 @@
+version: '3'
+services:
+
+  training_service:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+
+    env_file:
+      - ./local_utils/.env_local
+    ports:
+      - 8081:8080
+
+  postgres:
+    image: postgres:15
+    restart: always
+    env_file:
+      - ./local_utils/.env_local
+    ports:
+      - 5433:5432
+#    volumes:
+#      - ./local_utils/db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
