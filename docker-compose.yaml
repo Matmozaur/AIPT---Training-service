@@ -15,7 +15,7 @@ services:
     image: postgres:15
     restart: always
     env_file:
-      - ./local_utils/.env_local
+      - .env
     ports:
       - 5433:5432
 #    volumes:

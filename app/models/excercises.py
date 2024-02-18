@@ -14,16 +14,16 @@ class MuscleGroup(str, Enum):
     Triceps = 'Triceps'
     Neck = 'Neck'
     Forearms = 'Forearms'
-    Glutes = 'Glutes'
+    Gluts = 'Gluts'
     Quads = 'Quads'
     Hamstrings = 'Hamstrings'
-    Calfs = 'Calfs'
+    Calves = 'Calves'
     
 
-class Excercise(BaseModel):
+class Exercise(BaseModel):
     name: str
-    engadements: Dict[MuscleGroup, float]
+    engagements: Dict[MuscleGroup, float]
 
 
-class ExcercisePerformed(Excercise):
+class ExercisePerformed(Exercise):
     sets: int

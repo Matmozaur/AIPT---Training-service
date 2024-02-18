@@ -6,7 +6,7 @@ from models.training import Training
 
 def effective_sets(training: Training) -> Dict[MuscleGroup, float]:
     result = {k: 0 for k in MuscleGroup}
-    for excercise in training.excercises:
-        for k, v in excercise.engadements.items():
-            result[k] += v * excercise.sets
+    for exercise in training.exercises:
+        for k, v in exercise.engagements.items():
+            result[k.value] += v * exercise.sets
     return {k: round(v, 2) for k, v in result.items()}
