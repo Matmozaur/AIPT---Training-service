@@ -1,6 +1,6 @@
 from typing import Dict
 
-from models.excercises import MuscleGroup
+from models.exercises import MuscleGroup
 from models.training import Training
 
 

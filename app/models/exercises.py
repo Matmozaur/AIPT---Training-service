@@ -14,11 +14,12 @@ class MuscleGroup(str, Enum):
     Triceps = 'Triceps'
     Neck = 'Neck'
     Forearms = 'Forearms'
-    Gluts = 'Gluts'
+    Glutes = 'Glutes'
     Quads = 'Quads'
     Hamstrings = 'Hamstrings'
-    Calves = 'Calves'
-    
+    Calfs = 'Calfs'
+    Obliques = 'Obliques'
+
 
 class Exercise(BaseModel):
     name: str
