@@ -9,6 +9,7 @@ readme = "README.md"
 python = "3.12"
 sqlmodel = "0.0.16"
 fastapi = "^0.111.0"
+alembic = "^1.13.1"
 
 
 [build-system]
