@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -10,6 +11,11 @@ from app.models.users import *
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+section = config.config_ini_section
+config.set_section_option(section, "DB_USER", os.environ.get("DB_USER", 'admin'))
+config.set_section_option(section, "DB_PASS", os.environ.get("DB_PASS", 'test'))
+config.set_section_option(section, "DB_DOMAIN", os.environ.get("DB_DOMAIN", 'pg_training'))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
