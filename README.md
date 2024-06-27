@@ -1,1 +1,1 @@
-# AI personal trainer
+# AIPT - Training service
