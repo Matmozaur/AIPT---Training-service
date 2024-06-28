@@ -141,7 +141,7 @@ class TrainingService:
                               71: {'name': 'Neck Rotation', 'engagements': {'Neck': 100}},
                               72: {'name': 'Shrugs',
                                    'engagements': {'Upper_back': 100, 'Traps': 100, 'Shoulders': 30}}}
-        self.standard_exercises = {i: Exercise(**el) for i, el in standard_exercises}
+        self.standard_exercises = {i: Exercise(**el) for i, el in standard_exercises.items()}
 
     def analyse_training(self, training: TrainingInput) -> TrainingEvaluation:
         training = Training(exercises=[ExercisePerformed(**self.standard_exercises[i].dict(), sets=j) for i, j in
