@@ -1,6 +1,26 @@
 version: '3'
 services:
 
+  postgres:
+    container_name: pg_training
+    image: postgres:15
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 5433:5432
+
+#  training_service_migrator:
+#    container_name: training_service
+#    build:
+#      context: .
+#      dockerfile: ./Dockerfile
+#
+#    env_file:
+#      - ./.env
+#    ports:
+#      - 8081:8080
+
   training_service:
     container_name: training_service
     build:
@@ -11,14 +31,5 @@ services:
       - ./.env
     ports:
       - 8081:8080
-
-  postgres:
-    container_name: pg_training
-    image: postgres:15
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - 5433:5432
-#    volumes:
-#      - ./db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    volumes:
+      - ./app/alembic:/app/alembic
