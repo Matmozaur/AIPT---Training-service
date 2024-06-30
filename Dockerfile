@@ -25,4 +25,6 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 COPY ./app /app
 
+# RUN alembic upgrade head
+
 ENTRYPOINT ["python", "main.py"]
