@@ -9,6 +9,7 @@ from alembic import context
 
 from models.users import *
 from models.exercises import *
+from models.training import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

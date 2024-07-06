@@ -33,13 +33,13 @@ class ExerciseMuscleGroupLink(SQLModel, table=True):
     muscle_group_id: Optional[int] = Field(default=None, foreign_key="musclegroupmodel.id", primary_key=True)
     engagement: float = Field(default=0)
     exercise: "Exercise" = Relationship(back_populates="engagements")
-    muscle_group: MuscleGroupModel = Relationship(back_populates="engagements")
+    muscle_group: "MuscleGroupModel" = Relationship(back_populates="engagements")
 
 
 class Exercise(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
-    engagements: List[ExerciseMuscleGroupLink] = Relationship(back_populates="exercise")
+    engagements: List["ExerciseMuscleGroupLink"] = Relationship(back_populates="exercise")
 
 
 class ExercisePerformed(SQLModel, table=True):
