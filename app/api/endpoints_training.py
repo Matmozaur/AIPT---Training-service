@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 from models.request import TrainingInput
-from models.training import TrainingEvaluation
+from models.response import TrainingEvaluation
 from services.training_service import TrainingService
 
 router_trainings = APIRouter()

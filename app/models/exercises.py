@@ -40,9 +40,24 @@ class Exercise(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     engagements: List["ExerciseMuscleGroupLink"] = Relationship(back_populates="exercise")
+    exerciseperformed: "ExercisePerformed" = Relationship(back_populates="exercise")
 
 
 class ExercisePerformed(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    exercise_id: Optional[int] = Field(default=None, foreign_key="exercise.id", primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True, unique=True)
     sets: int
+    exercise_id: Optional[int] = Field(default=None, foreign_key="exercise.id")
+    exercise: "Exercise" = Relationship(back_populates="exerciseperformed")
+    trainings: "TrainingExercisePerformedLink" = Relationship(back_populates="exerciseperformed")
+
+
+class Training(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    exercisesperformed: List["TrainingExercisePerformedLink"] = Relationship(back_populates="training")
+
+
+class TrainingExercisePerformedLink(SQLModel, table=True):
+    training_id: Optional[int] = Field(default=None, foreign_key="training.id", primary_key=True)
+    exerciseperformed_id: Optional[int] = Field(default=None, foreign_key="exerciseperformed.id", primary_key=True)
+    exerciseperformed: "ExercisePerformed" = Relationship(back_populates="trainings")
+    training: "Training" = Relationship(back_populates="exercisesperformed")

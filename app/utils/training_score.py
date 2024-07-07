@@ -1,7 +1,6 @@
 from typing import Dict
 
-from models.exercises import MuscleGroup
-from models.training import Training
+from models.exercises import MuscleGroup,Training
 
 
 def effective_sets(training: Training) -> Dict[MuscleGroup, float]:

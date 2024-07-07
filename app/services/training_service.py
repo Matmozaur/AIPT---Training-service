@@ -1,6 +1,7 @@
 from models.exercises import Exercise, ExercisePerformed
 from models.request import TrainingInput
-from models.training import Training, TrainingEvaluation
+from models.exercises import Training
+from models.response import TrainingEvaluation
 from utils.training_score import effective_sets
 
 
