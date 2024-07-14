@@ -48,4 +48,4 @@ class TrainingService:
                 total_exercises += 1
                 total_sets += sets
 
-        return TrainingEvaluation(effective_sets=effective_sets(training))
+            return TrainingEvaluation(effective_sets=effective_sets(training))
