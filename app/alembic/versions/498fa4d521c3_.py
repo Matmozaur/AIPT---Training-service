@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 002269fc4a93
+Revision ID: 498fa4d521c3
 Revises: 
-Create Date: 2024-07-07 17:21:05.626692
+Create Date: 2024-07-21 17:44:03.181421
 
 """
 import logging
@@ -15,8 +15,9 @@ from sqlmodel import select
 
 from models.exercises import MuscleGroup, MuscleGroupModel, Exercise, ExerciseMuscleGroupLink
 
+
 # revision identifiers, used by Alembic.
-revision: str = '002269fc4a93'
+revision: str = '498fa4d521c3'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -36,7 +37,7 @@ def upgrade() -> None:
     sa.UniqueConstraint('name')
     )
     op.create_table('training',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -52,7 +53,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('exercise_id', 'muscle_group_id')
     )
     op.create_table('exerciseperformed',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('sets', sa.Integer(), nullable=False),
     sa.Column('exercise_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['exercise_id'], ['exercise.id'], ),
@@ -60,8 +61,8 @@ def upgrade() -> None:
     sa.UniqueConstraint('id')
     )
     op.create_table('trainingexerciseperformedlink',
-    sa.Column('training_id', sa.Integer(), nullable=False),
-    sa.Column('exerciseperformed_id', sa.Integer(), nullable=False),
+    sa.Column('training_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('exerciseperformed_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.ForeignKeyConstraint(['exerciseperformed_id'], ['exerciseperformed.id'], ),
     sa.ForeignKeyConstraint(['training_id'], ['training.id'], ),
     sa.PrimaryKeyConstraint('training_id', 'exerciseperformed_id')

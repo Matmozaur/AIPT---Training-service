@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import List, Optional
+from uuid import uuid4
 
 from sqlmodel import SQLModel, Field, Relationship
 
@@ -44,7 +45,7 @@ class Exercise(SQLModel, table=True):
 
 
 class ExercisePerformed(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True, unique=True)
+    id: Optional[str] = Field(default_factory=lambda: str(uuid4()), primary_key=True, unique=True)
     sets: int
     exercise_id: Optional[int] = Field(default=None, foreign_key="exercise.id")
     exercise: "Exercise" = Relationship(back_populates="exerciseperformed")
@@ -52,12 +53,12 @@ class ExercisePerformed(SQLModel, table=True):
 
 
 class Training(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: Optional[str] = Field(default_factory=lambda: str(uuid4()), primary_key=True)
     exercisesperformed: List["TrainingExercisePerformedLink"] = Relationship(back_populates="training")
 
 
 class TrainingExercisePerformedLink(SQLModel, table=True):
-    training_id: Optional[int] = Field(default=None, foreign_key="training.id", primary_key=True)
-    exerciseperformed_id: Optional[int] = Field(default=None, foreign_key="exerciseperformed.id", primary_key=True)
+    training_id: Optional[str] = Field(default=None, foreign_key="training.id", primary_key=True)
+    exerciseperformed_id: Optional[str] = Field(default=None, foreign_key="exerciseperformed.id", primary_key=True)
     exerciseperformed: "ExercisePerformed" = Relationship(back_populates="trainings")
     training: "Training" = Relationship(back_populates="exercisesperformed")

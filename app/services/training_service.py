@@ -23,7 +23,7 @@ class TrainingService:
             logging.debug(training_input)
             training = Training()
             logging.debug(training)
-            # session.add(training)
+            session.add(training)
             # session.commit()
 
             total_exercises = 0
@@ -40,21 +40,26 @@ class TrainingService:
                     raise ValueError(f"Exercise with id {exercise_id} does not exist")
 
                 # Create ExercisePerformed instance
-                exercise_performed = ExercisePerformed(sets=sets, exercise_id=exercise_id)
+                exercise_performed = ExercisePerformed(sets=sets,
+                                                       exercise_id=exercise_id,
+                                                       exercise=exercise)
                 logging.debug(exercise_performed)
-                # session.add(exercise_performed)
+                session.add(exercise_performed)
                 # session.commit()
 
                 # Link to Training
                 training_exercise_performed_link = TrainingExercisePerformedLink(
                     training_id=training.id,
-                    exerciseperformed_id=exercise_performed.id
+                    exerciseperformed_id=exercise_performed.id,
+                    exercise_performed=exercise_performed
                 )
-                # session.add(training_exercise_performed_link)
+                session.add(training_exercise_performed_link)
 
                 total_exercises += 1
                 total_sets += sets
                 logging.debug(training_exercise_performed_link)
+                training.exercisesperformed.append(training_exercise_performed_link)
+                session.flush()
 
             logging.debug(training)
             return TrainingEvaluation(effective_sets=effective_sets(training))
