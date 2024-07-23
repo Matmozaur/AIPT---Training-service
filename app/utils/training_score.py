@@ -11,5 +11,5 @@ def effective_sets(training: Training) -> Dict[MuscleGroup, float]:
         exercise = exercise_link.exerciseperformed
         for v in exercise.exercise.engagements:
             logging.debug(v)
-            result[v.muscle_group_id] += v.engagement * exercise.sets
+            result[v.muscle_group.name] += v.engagement/100 * exercise.sets
     return {k: round(v, 2) for k, v in result.items()}
