@@ -5,6 +5,7 @@ from models.exercises import Exercise, ExercisePerformed, TrainingExercisePerfor
 from models.request import TrainingInput
 from models.exercises import Training
 from models.response import TrainingEvaluation
+from utils.exceptions import TrainingNotFoundError
 from utils.training_score import effective_sets
 
 from sqlmodel import create_engine, Session
@@ -37,7 +38,7 @@ class TrainingService:
                 exercise = session.query(Exercise).filter(Exercise.id == exercise_id).first()
                 logging.debug(exercise)
                 if not exercise:
-                    raise ValueError(f"Exercise with id {exercise_id} does not exist")
+                    raise TrainingNotFoundError(f"Exercise with id {exercise_id} does not exist")
 
                 # Create ExercisePerformed instance
                 exercise_performed = ExercisePerformed(sets=sets,
