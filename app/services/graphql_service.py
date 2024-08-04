@@ -1,70 +1,79 @@
+import os
+
 import graphene
-from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
-from sqlmodel import Session, select
-from models import (
-    MuscleGroupModel,
-    Exercise,
-    ExerciseMuscleGroupLink,
-    ExercisePerformed,
-    Training,
-    TrainingExercisePerformedLink,
-)
-from database import engine
+from sqlmodel import Session, create_engine, select
+
+from models.exercises import MuscleGroupModel, Exercise, Training, ExerciseMuscleGroupLink
+
 
 # GraphQL Types
-class MuscleGroupModelType(SQLAlchemyObjectType):
-    class Meta:
-        model = MuscleGroupModel
+class MuscleGroupModelType(graphene.ObjectType):
+    id = graphene.Int()
+    name = graphene.String()
 
-class ExerciseType(SQLAlchemyObjectType):
-    class Meta:
-        model = Exercise
 
-class ExerciseMuscleGroupLinkType(SQLAlchemyObjectType):
-    class Meta:
-        model = ExerciseMuscleGroupLink
+class ExerciseType(graphene.ObjectType):
+    id = graphene.Int()
+    name = graphene.String()
+    engagements = graphene.List(lambda: ExerciseMuscleGroupLinkType)
 
-class ExercisePerformedType(SQLAlchemyObjectType):
-    class Meta:
-        model = ExercisePerformed
 
-class TrainingType(SQLAlchemyObjectType):
-    class Meta:
-        model = Training
+class ExerciseMuscleGroupLinkType(graphene.ObjectType):
+    exercise_id = graphene.Int()
+    muscle_group_id = graphene.Int()
+    engagement = graphene.Float()
+    exercise = graphene.Field(lambda: ExerciseType)
+    muscle_group = graphene.Field(lambda: MuscleGroupModelType)
 
-class TrainingExercisePerformedLinkType(SQLAlchemyObjectType):
-    class Meta:
-        model = TrainingExercisePerformedLink
 
-# GraphQL Query
+class ExercisePerformedType(graphene.ObjectType):
+    id = graphene.String()
+    sets = graphene.Int()
+    exercise = graphene.Field(lambda: ExerciseType)
+
+
+class TrainingType(graphene.ObjectType):
+    id = graphene.String()
+    exercisesperformed = graphene.List(lambda: TrainingExercisePerformedLinkType)
+
+
+class TrainingExercisePerformedLinkType(graphene.ObjectType):
+    training_id = graphene.String()
+    exerciseperformed_id = graphene.String()
+    exerciseperformed = graphene.Field(lambda: ExercisePerformedType)
+    training = graphene.Field(lambda: TrainingType)
+
+
+DATABASE_URL = f"postgresql://{os.environ.get("DB_USER", 'postgres')}:{os.environ.get("DB_PASS", 'test')}@{os.environ.get("DB_DOMAIN", 'pg_training')}/postgres"
+engine = create_engine(DATABASE_URL, echo=True)
+
+# GraphQL Queries
 class Query(graphene.ObjectType):
     musclegroups = graphene.List(MuscleGroupModelType)
     exercises = graphene.List(ExerciseType)
     trainings = graphene.List(TrainingType)
 
     def resolve_musclegroups(self, info):
-        query = select(MuscleGroupModel)
         with Session(engine) as session:
-            return session.exec(query).all()
+            return session.exec(select(MuscleGroupModel)).all()
 
     def resolve_exercises(self, info):
-        query = select(Exercise)
         with Session(engine) as session:
-            return session.exec(query).all()
+            return session.exec(select(Exercise)).all()
 
     def resolve_trainings(self, info):
-        query = select(Training)
         with Session(engine) as session:
-            return session.exec(query).all()
+            return session.exec(select(Training)).all()
 
-# GraphQL Mutation
+
+# GraphQL Mutations
 class CreateExercise(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
         muscle_group_ids = graphene.List(graphene.Int, required=False)
         engagement = graphene.Float(required=False)
 
-    exercise = graphene.Field(lambda: ExerciseType)
+    exercise = graphene.Field(ExerciseType)
 
     def mutate(self, info, name, muscle_group_ids=None, engagement=0):
         with Session(engine) as session:
@@ -83,12 +92,13 @@ class CreateExercise(graphene.Mutation):
                             engagement=engagement
                         )
                         session.add(link)
-
                 session.commit()
 
         return CreateExercise(exercise=exercise)
 
+
 class Mutation(graphene.ObjectType):
     create_exercise = CreateExercise.Field()
+
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

@@ -3,8 +3,10 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette_graphene3 import GraphQLApp
 
 from api.endpoints_training import router_trainings
+from services.graphql_service import schema
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -23,6 +25,8 @@ app.add_middleware(
 )
 
 app.include_router(router_trainings, prefix="/v1/training")
+
+app.add_route("/graphql", GraphQLApp(schema=schema))
 
 
 if __name__ == "__main__":

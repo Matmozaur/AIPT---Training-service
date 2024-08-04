@@ -7,10 +7,14 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "3.12"
-sqlmodel = "0.0.16"
 fastapi = "^0.111.0"
 alembic = "^1.13.1"
 psycopg2-binary = "^2.9.9"
+sqlmodel = "^0.0.21"
+graphene = "^3.3"
+starlette-graphql = "^0.2.1"
+starlette-graphene3 = "^0.6.0"
+requests = "^2.32.3"
 
 
 [build-system]
