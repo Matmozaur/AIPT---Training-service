@@ -2,7 +2,7 @@ import requests
 import json
 
 # Define the GraphQL endpoint
-url = "http://localhost:8080/graphql"
+url = "http://localhost:8081/graphql"
 
 # Define headers for the request
 headers = {

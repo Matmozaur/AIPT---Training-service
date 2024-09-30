@@ -2,8 +2,20 @@ import os
 
 import graphene
 from sqlmodel import Session, create_engine, select
+from starlette_graphene3 import GraphQLApp
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
 
 from models.exercises import MuscleGroupModel, Exercise, Training, ExerciseMuscleGroupLink
+
+# Replace with your database URL
+DATABASE_URL = f"postgresql+asyncpg://{os.environ.get("DB_USER", 'postgres')}:{os.environ.get("DB_PASS", 'test')}@{os.environ.get("DB_DOMAIN", 'pg_training')}/postgres"
+
+# Create async engine
+engine = create_async_engine(DATABASE_URL, future=True, echo=True)
+
+# Create a session factory for async sessions
+async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
 # GraphQL Types
@@ -101,4 +113,12 @@ class Mutation(graphene.ObjectType):
     create_exercise = CreateExercise.Field()
 
 
+# Define the context function for database session
+async def context_value(request):
+    async with async_session() as session:
+        return {"session": session}
+
+
 schema = graphene.Schema(query=Query, mutation=Mutation)
+graphql_app = GraphQLApp(schema=schema, context_value=context_value)
+

@@ -15,6 +15,7 @@ graphene = "^3.3"
 starlette-graphql = "^0.2.1"
 starlette-graphene3 = "^0.6.0"
 requests = "^2.32.3"
+asyncpg = "^0.29.0"
 
 
 [build-system]
