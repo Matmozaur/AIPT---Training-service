@@ -7,7 +7,7 @@ from sqlmodel import SQLModel
 
 from alembic import context
 
-from models.users import *
+# from models.users import *
 from models.exercises import *
 
 # this is the Alembic Config object, which provides

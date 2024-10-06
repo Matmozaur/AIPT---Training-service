@@ -82,29 +82,33 @@ class Query(graphene.ObjectType):
 class CreateExercise(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
-        muscle_group_ids = graphene.List(graphene.Int, required=False)
-        engagement = graphene.Float(required=False)
+        muscle_group_ids = graphene.List(graphene.Int, required=True)
+        engagements = graphene.List(graphene.Float, required=True)
 
     exercise = graphene.Field(ExerciseType)
 
-    def mutate(self, info, name, muscle_group_ids=None, engagement=0):
-        with Session(engine) as session:
-            exercise = Exercise(name=name)
-            session.add(exercise)
-            session.commit()
-            session.refresh(exercise)
+    async def mutate(self, info, name, muscle_group_ids, engagements):
+        async with async_session() as session:
+            async with session.begin():
+                # Create the exercise instance
+                exercise = Exercise(name=name)
+                session.add(exercise)
+                await session.flush()  # Ensures the ID is assigned
 
-            if muscle_group_ids:
-                for muscle_group_id in muscle_group_ids:
-                    muscle_group = session.get(MuscleGroupModel, muscle_group_id)
-                    if muscle_group:
-                        link = ExerciseMuscleGroupLink(
-                            exercise_id=exercise.id,
-                            muscle_group_id=muscle_group.id,
-                            engagement=engagement
-                        )
-                        session.add(link)
-                session.commit()
+                # Add muscle group links
+                if muscle_group_ids:
+                    for muscle_group_id, engagement in zip(muscle_group_ids, engagements):
+                        muscle_group = await session.get(MuscleGroupModel, muscle_group_id)
+                        if muscle_group:
+                            link = ExerciseMuscleGroupLink(
+                                exercise_id=exercise.id,
+                                muscle_group_id=muscle_group.id,
+                                engagement=engagement
+                            )
+                            session.add(link)
+
+            # Commit the transaction to persist all changes
+            await session.commit()
 
         return CreateExercise(exercise=exercise)
 

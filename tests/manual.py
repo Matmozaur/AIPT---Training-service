@@ -19,9 +19,11 @@ def send_graphql_query(query):
 # Test the createExercise mutation
 create_exercise_mutation = """
 mutation {
-  createExercise(name: "Bench Press", muscleGroupIds: [1, 2], engagement: 0.8) {
-    id
-    name
+  createExercise(name: "Test exc", muscleGroupIds: [1, 2], engagements: [0.8, 0.5]) {
+    exercise {
+      id
+      name
+    }
   }
 }
 """
