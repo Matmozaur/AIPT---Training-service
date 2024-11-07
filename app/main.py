@@ -25,7 +25,7 @@ app.add_middleware(
 
 app.include_router(router_trainings, prefix="/v1/training")
 
-app.add_route("/graphql", graphql_app)
+app.add_route("/v1/graphql", graphql_app)
 
 
 if __name__ == "__main__":
